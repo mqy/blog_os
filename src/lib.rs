@@ -10,7 +10,7 @@ pub mod serial;
 pub mod vga_buffer;
 
 pub trait Testable {
-    fn run(&self) -> ();
+    fn run(&self);
 }
 
 impl<T> Testable for T
@@ -36,6 +36,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
     serial_println!("[failed]\n");
     serial_println!("Error: {}\n", info);
     exit_qemu(QemuExitCode::Failed);
+    #[allow(clippy::empty_loop)]
     loop {}
 }
 
@@ -58,6 +59,7 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
 /// Entry point for `cargo xtest`
 #[cfg(test)]
 #[no_mangle]
+#[allow(clippy::empty_loop)]
 pub extern "C" fn _start() -> ! {
     test_main();
     loop {}
